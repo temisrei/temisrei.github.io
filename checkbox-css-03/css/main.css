@@ -73,6 +73,7 @@ a {
 	display: block;
 	float: left;
 	clear: left;
+	position: relative;
 	margin-left: 25px;
 	padding: 5px;
 	border-radius: 5px;
@@ -81,7 +82,8 @@ a {
 	cursor: pointer;
 }
 
-label::before {
+label::before,
+a::before {
 	display: block;
 	position: absolute;
 	top: 6px;
@@ -93,9 +95,45 @@ label::before {
 	content: '\f07b';
 }
 
+input:checked + label::before {
+	content: '\f07c';
+}
 
+a::before {
+	content: '\f068';
+}
 
+input:focus + label,
+a:focus {
+	
+}
 
+.sub {
+	display: none;
+	float: left;
+	margin-left: 35px;
+}
 
+input:checked ~ .sub {
+	display: block;
+}
 
+input[type=reset] {
+	display: block;
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 10px;
+	color: #e8ebed;
+	background-color: #6b7c87;
+	font-family: inherit;
+	font-size: .9em;
+	cursor: pointer;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+}
 
+input[type=reset]:focus {
+	outline: none;
+	box-shadow: 0 0 0 4px #b9c3c9;
+}
