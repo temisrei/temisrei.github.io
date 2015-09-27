@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  	<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+  	<script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap.js"></script>
+
+  	<script src="http://code.jquery.com/jquery.min.js"></script>
+  	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.min.js"></script>
+
+  	<meta charset="utf-8">
+  	<title>【AngularJS 開發實戰：新手入門篇】實作練習</title>
+</head>
+<body ng-init="PName='T-Shirt';Price=250;Qty=1">
+	商品名稱：<input type="text" ng-model="PName"><br>
+	商品單價：<input type="number" ng-model="Price"><br>
+	商品數量：<input type="number" ng-model="Qty"><br>
+	<hr>
+	您所購買的商品名稱為：{{ PName }}，單價為：NT$ {{ Price | number:0 }}，購買數量為：{{ Qty }}<br>
+	總金額為：NT$ {{ Price*Qty | number:0 }}
+</body>
+</html>

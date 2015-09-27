@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html ng-app="app1">
+<head>
+  
+  <script src="http://code.jquery.com/jquery.min.js"></script>
+  
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+  <script src="http://getbootstrap.com/2.3.2/assets/js/bootstrap.js"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28/angular.min.js"></script>
+
+  <meta charset="utf-8">
+  <title>【AngularJS 開發實戰：新手入門篇】實作練習</title>
+
+  <style>
+  .highlight {
+    background-color: yellow;
+  }
+  </style>
+
+  <script>
+  angular.module('app1', [])
+  .controller('MainCtrl', MainCtrl);
+
+  function MainCtrl($scope, $http) {
+
+      $scope.CartItem = {};
+
+      $scope.CartItem.PName = 'Pencil';
+      $scope.CartItem.Price = 60;
+      $scope.CartItem.Qty = 5;
+
+      $scope.subtotal = function (Price, Qty) {
+          var r = Price * Qty;
+          if (Qty >= 10) {
+              r = r * 0.9;
+          }
+          return r;
+      };
+
+      var vm = $scope;
+
+      vm.carts = [];
+      vm.carts.push({
+          PName: 'T-Shirt',
+          Price: 199,
+          Qty: 3
+      });
+      vm.carts.push({
+          PName: 'Shoes',
+          Price: 1800,
+          Qty: 2
+      });
+      vm.carts.push({
+          PName: 'Eye glasses',
+          Price: 1000,
+          Qty: 5
+      });
+
+      vm.IsDebug = false;
+
+      vm.add = function () {
+          vm.carts.push({
+              'PName': $scope.CartItem.PName,
+              'Price': $scope.CartItem.Price,
+              'Qty': $scope.CartItem.Qty
+          });
+      };
+
+      vm.sum = function () {
+          var r = 0;
+          angular.forEach($scope.carts, function (item) {
+              r += $scope.subtotal(item.Price, item.Qty);
+          });
+          return r;
+      };
+
+      vm.del = function (item) {
+          var idx = $scope.carts.indexOf(item);
+          $scope.carts.splice(idx, 1);
+      };
+
+      vm.addCartQty = function (item, num) {
+          item.Qty = item.Qty + num;
+          if (item.Qty > 10) {
+              item.Qty = 10;
+          }
+          if (item.Qty <= 0) {
+              if (confirm('數量已為0，您確定要刪除嗎？')) {
+                  var idx = $scope.carts.indexOf(item);
+                  vm.del(idx);
+              } else {
+                  item.Qty = 1;
+              }
+          }
+      };
+
+      vm.orderByColumn = 'Price';
+
+      vm.changeOrderBy = function (column_name) {
+          if (vm.orderByColumn.indexOf(column_name) == -1) {
+              vm.orderByColumn = column_name;
+          }
+          if (vm.orderByColumn == column_name) {
+              vm.orderByColumn = '-' + column_name;
+          } else {
+              vm.orderByColumn = column_name;
+          }
+      };
+
+      vm.batchDelete = function () {
+          var arr = [];
+          angular.forEach($scope.carts, function (item) {
+              if (!item.IsChecked) {
+                  arr.push(item);
+              }
+          });
+          $scope.carts = arr;
+      };
+
+      vm.CheckAll = function () {
+          angular.forEach($scope.carts, function (item) {
+              item.IsChecked = vm.IsCheckAll;
+          });
+      };
+
+      vm.save = function () {
+          $http.post('/Home/Save', $scope.carts)
+          .success(function (data) {
+              console.log('OK');
+          })
+          .error(function () {
+              console.log("Fail");
+          });
+      };
+
+      vm.edit = function (item) {
+          $scope.EditMode = true;
+          $scope.CartItem = item;
+      };
+      vm.update = function () {
+          $scope.EditMode = false;
+          $scope.CartItem = {};
+      };
+  }
+
+
+  </script>
+
+
+</head>
+<body ng-controller="MainCtrl">
+
+    <form name="form1">
+    商品名稱: <input name="PName" type="text" ng-model="CartItem.PName" required><span ng-show="form1.PName.$invalid">必填欄位，請輸入值</span><br>
+    商品單價: <input name="Price" type="number" ng-model="CartItem.Price" required><span ng-show="form1.Price.$invalid">必填欄位，請輸入值</span><br>
+    購買數量: <input name="Qty" type="number" ng-model="CartItem.Qty" required><span ng-show="form1.Qty.$invalid">必填欄位，請輸入值</span><br>
+    <br>
+    您購買 {{CartItem.PName}} 商品，單價 NT${{CartItem.Price|number:0}} 元，數量 {{CartItem.Qty}} 件，共 NT${{subtotal(CartItem.Price, CartItem.Qty)|number:0}} 元。
+    <br>
+    <br>
+    <button class="btn" ng-click="update()" ng-show="EditMode" class="btn btn-green">更新</button>
+    <button class="btn" ng-click="add()" ng-hide="EditMode" ng-disabled="form1.$invalid">加入購物車</button>
+    <button class="btn" ng-click="save()">儲存購物車</button>
+    <br>
+    <br>    
+
+    <label>
+        <input type="checkbox" ng-model="IsDebug"> 啟用偵錯
+    </label>
+
+    <pre ng-if="IsDebug">{{carts|json}}</pre>
+
+    <h4>
+        目前購買 {{ carts.length }} 件，總價 {{ sum() | number:0 }} 元。
+    </h4>
+
+    <table class="table">
+    <caption>
+      搜尋：<input type="text" ng-model="keyword">
+    </caption>
+        <tr>
+            <th>
+                <input type="checkbox" ng-model="IsCheckAll" ng-change="CheckAll()">
+            </th>
+            <th>#</th>
+            <th>
+                <a href="#" ng-click="changeOrderBy('PName')">商品名稱</a>
+            </th>
+            <th>
+                <a href="#" ng-click="changeOrderBy('Price')">商品價格</a>
+            </th>
+            <th>
+                <a href="#" ng-click="changeOrderBy('Qty')">購買數量</a>
+            </th>
+            <th>小計</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="item in carts | orderBy: orderByColumn | filter: keyword"
+            ng-class="{
+                    highlight: item.IsChecked
+                  }">
+            <td>
+                <input type="checkbox" ng-model="item.IsChecked">
+            </td>
+            <td>{{$index+1}}</td>
+            <td>{{item.PName}}</td>
+            <td>{{item.Price}}</td>
+            <td>
+                <button ng-click="addCartQty(item,-1)"
+                        ng-disabled="item.Qty <= 1">
+                    -
+                </button>
+                {{item.Qty}}
+                <button ng-click="addCartQty(item,+1)"
+                        ng-disabled="item.Qty >= 10">
+                    +
+                </button>
+            </td>
+            <td>{{subtotal(item.Price, item.Qty)}}</td>
+            <td>
+                <button ng-click="edit(item)" class="btn"><i class="icon-edit"></button>
+                <button ng-click="del(item)" class="btn btn-danger"><i class="icon-trash icon-white"></button>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button class="btn btn-danger"
+                        ng-click="batchDelete()">
+                    批次刪除
+                </button>
+            </td>
+            <td></td>
+            <td></td>
+            <td>總計</td>
+            <td>NT${{sum()|number:0}}</td>
+            <td></td>
+        </tr>
+    </table>
+
+    <br>  <br>
+    <br>
+    <br>
+    <br>
+
+    </form>
+</body>
+</html>
