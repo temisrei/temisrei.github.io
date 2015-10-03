@@ -1,0 +1,108 @@
+html {
+	font-family: "儷黑 Pro", "LiHei Pro", "微軟正黑體", "Microsoft JhengHei", serif, sans-serif, monospace;
+	font-size: 16px;
+	line-height: 1.5;
+}
+
+body {
+	background-color: #87cefa;
+}
+
+img {
+    vertical-align: middle;
+}
+
+button {
+	outline: none;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+.clearfix::before,
+.clearfix::after {
+	content: " ";
+	display: table;
+}
+.clearfix::after {
+	clear: both;
+}
+
+.page-main {
+	position: relative;
+}
+
+.page-main > article {
+	padding: 20px 0 40px;
+}
+
+.page-main > article h2 {
+	color: #fff;
+	text-align: center;
+	margin: 0 0 40px;
+	font-weight: normal;
+}
+
+#buttons2 {
+	background-color: #01b169;
+	height: 360px;
+}
+
+#buttons2 .inner {
+	position: relative;
+	width: 100%;
+	margin: 0 auto;
+}
+
+#buttons2 button {
+	display: block;
+	position: absolute;
+	width: 250px;
+	height: 260px;
+	overflow: hidden;
+	padding: 20px 0 35px;
+	color: #3f51b5;
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.2);
+	border-radius: 10%;
+}
+
+#buttons2 button:nth-child(1) {
+	left: 10%;
+}
+#buttons2 button:nth-child(2) {
+	left: 30%;
+}
+#buttons2 button:nth-child(3) {
+	left: 50%;
+}
+#buttons2 button:nth-child(4) {
+	left: 70%;
+}
+
+#buttons2 button img {
+	width: 200px;
+	height: 200px;
+	margin-bottom: 5px;
+}
+
+#buttons2 button img:nth-child(1) {
+	position: absolute;
+}
+#buttons2 button img:nth-child(2) {
+	opacity: 0;
+}
+
+
+
+
+
+
+
